@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 
-class Categorytextfield extends StatelessWidget {
+class NoteTextField extends StatelessWidget {
   final String hinttext;
   final TextEditingController mycontroller;
   final String? Function(String?)? validator;
 
-  const Categorytextfield(
+  const NoteTextField(
       {super.key,
       required this.hinttext,
       required this.mycontroller,
@@ -18,6 +18,7 @@ class Categorytextfield extends StatelessWidget {
     return TextFormField(
       controller: mycontroller,
       validator: validator,
+      maxLines: 5,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
           hintText: hinttext,
@@ -29,13 +30,13 @@ class Categorytextfield extends StatelessWidget {
               borderRadius: BorderRadius.circular(50),
               borderSide:
                   BorderSide(color: const Color.fromARGB(255, 184, 184, 184))),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50),
-              borderSide: BorderSide(color: Colors.grey)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
               borderSide:
-                  BorderSide(color: const Color.fromARGB(255, 92, 92, 92)))),
+                  BorderSide(color: const Color.fromARGB(255, 92, 92, 92))),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: BorderSide(color: Colors.grey))),
     );
   }
 }

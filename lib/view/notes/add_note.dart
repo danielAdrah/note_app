@@ -1,13 +1,19 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, body_might_complete_normally_nullable, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import '../../components/categoryTextField.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:note_app/components/note_text_field.dart';
 import '../../components/custombuttonauth.dart';
 import '../../components/gradient_icon.dart';
 import '../../components/gradient_text.dart';
+import '../../components/upload_button.dart';
 import '../../theme.dart';
-import 'notes_view.dart';
+import 'package:path/path.dart';
 
 class AddNote extends StatefulWidget {
   final String docID;
@@ -22,9 +28,33 @@ class _AddNoteState extends State<AddNote> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   TextEditingController noteName = TextEditingController();
   bool addLoading = false;
+  bool imgLoading = false;
+  File? file;
+  String? url;
   //==============
 
-  Future<void> addNote() async {
+  getImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imgLoading = true;
+    });
+    if (image != null) {
+      file = File(image.path);
+      var imageName = basename(image.path);
+
+      var refStorage = FirebaseStorage.instance.ref("images/$imageName");
+      await refStorage.putFile(file!);
+      url = await refStorage.getDownloadURL();
+    }
+    setState(() {});
+    setState(() {
+      imgLoading = false;
+    });
+  }
+
+  //=============
+  Future<void> addNote(BuildContext context) async {
     //here we want to reach every collection for each doc(category) and add a doc (note)
     //and then display it
     CollectionReference notes = FirebaseFirestore.instance
@@ -41,7 +71,7 @@ class _AddNoteState extends State<AddNote> {
           addLoading = true;
         });
         // we add the id to it so every user can add its own categories
-        DocumentReference response = await notes.add({'note': noteName.text});
+        DocumentReference response = await notes.add({'note': noteName.text, 'url':url ?? 'None'});
         setState(() {
           addLoading = false;
         });
@@ -110,7 +140,7 @@ class _AddNoteState extends State<AddNote> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                child: Categorytextfield(
+                child: NoteTextField(
                   hinttext: "Enter your note ",
                   mycontroller: noteName,
                   validator: (val) {
@@ -127,10 +157,37 @@ class _AddNoteState extends State<AddNote> {
                   : CustomButtonAuth(
                       title: "Add",
                       onPressed: () {
-                        addNote();
+                        addNote(context);
                         noteName.clear();
                       },
                     ),
+              SizedBox(height: 15),
+              imgLoading
+                  ? CircularProgressIndicator(
+                      color: ThemeColor.icons,
+                    )
+                  : FadeInUp(
+                      delay: Duration(milliseconds: 800),
+                      curve: Curves.decelerate,
+                      child: UploadButton(
+                        title: "Upload Image",
+                        isSelected: url == null ? false : true,
+                        onPressed: () async {
+                          await getImage();
+                        },
+                      ),
+                    ),
+              SizedBox(height: 40),
+              if (url != null)
+                SizedBox(
+                  child: Image.network(
+                    url!,
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              SizedBox(height: 50),
             ],
           ),
         ),

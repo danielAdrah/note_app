@@ -2,11 +2,13 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:note_app/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:note_app/firebase_options.dart';
 
 import 'auth/signup.dart';
+import 'filtering.dart';
 import 'home_page.dart';
 import 'view/categories/add_category.dart';
 import 'view/categories/edit_category.dart';
@@ -41,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: (FirebaseAuth.instance.currentUser != null &&
               FirebaseAuth.instance.currentUser!.emailVerified)

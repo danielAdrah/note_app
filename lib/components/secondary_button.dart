@@ -5,20 +5,25 @@ import 'package:flutter/material.dart';
 class SecondaryButton extends StatelessWidget {
   final void Function()? onPressed;
   final String title;
-  Color color;
+  final Gradient gradient;
+  double? width = 90;
   SecondaryButton(
-      {super.key, this.onPressed, required this.title, required this.color});
+      {super.key,
+      this.onPressed,
+      required this.title,
+      required this.gradient,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        // image: DecorationImage(image: AssetImage("assets/img/button.jpg")),
-        color: color,
+        gradient: gradient,
         borderRadius: BorderRadius.circular(20),
       ),
       child: MaterialButton(
         height: 40,
+        minWidth: width,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         // color: Colors.transparent,
         textColor: Colors.white,

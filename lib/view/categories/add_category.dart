@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, body_might_complete_normally_nullable, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,25 +66,33 @@ class _AddCategoryState extends State<AddCategory> {
       backgroundColor: ThemeColor.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: GradientText(
-          'A D D N O T E ',
-          gradient: LinearGradient(colors: [
-            Color(0xFF04bbff),
-            Color(0xFF515dff),
-          ]),
-          style: TextStyle(fontSize: 22),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: GradientIcon(
+        title: FadeInDown(
+          delay: Duration(milliseconds: 400),
+          curve: Curves.decelerate,
+          child: GradientText(
+            'A D D C A T E G O R Y ',
             gradient: LinearGradient(colors: [
-              Color(0xFF515dff),
               Color(0xFF04bbff),
+              Color(0xFF515dff),
             ]),
-            icon: Icons.arrow_back_ios,
-            size: 25,
+            style: TextStyle(fontSize: 22),
+          ),
+        ),
+        leading: FadeInLeft(
+          delay: Duration(milliseconds: 250),
+          curve: Curves.decelerate,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: GradientIcon(
+              gradient: LinearGradient(colors: [
+                Color(0xFF515dff),
+                Color(0xFF04bbff),
+              ]),
+              icon: Icons.arrow_back_ios,
+              size: 25,
+            ),
           ),
         ),
         centerTitle: true,
@@ -99,32 +108,43 @@ class _AddCategoryState extends State<AddCategory> {
               SizedBox(
                 width: 150,
                 height: 150,
-                child: Image.asset("assets/img/edit-file.png"),
+                child: ZoomIn(
+                    delay: Duration(milliseconds: 200),
+                    curve: Curves.decelerate,
+                    child: Image.asset("assets/img/edit-file.png")),
               ),
               SizedBox(height: 30),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                child: Categorytextfield(
-                  hinttext: "Enter the category name",
-                  mycontroller: categoryName,
-                  validator: (val) {
-                    if (val == "") {
-                      return "Can't be empty";
-                    }
-                  },
+                child: FadeInUp(
+                  delay: Duration(milliseconds: 350),
+                  curve: Curves.decelerate,
+                  child: Categorytextfield(
+                    hinttext: "Enter the category name",
+                    mycontroller: categoryName,
+                    validator: (val) {
+                      if (val == "") {
+                        return "Can't be empty";
+                      }
+                    },
+                  ),
                 ),
               ),
               addLoading
                   ? CircularProgressIndicator(
                       color: ThemeColor.icons,
                     )
-                  : CustomButtonAuth(
-                      title: "Add",
-                      onPressed: () {
-                        addCategory();
-                        categoryName.clear();
-                      },
+                  : FadeInUp(
+                      delay: Duration(milliseconds: 500),
+                      curve: Curves.decelerate,
+                      child: CustomButtonAuth(
+                        title: "Add",
+                        onPressed: () {
+                          addCategory();
+                          categoryName.clear();
+                        },
+                      ),
                     ),
             ],
           ),

@@ -1,12 +1,20 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, body_might_complete_normally_nullable, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+import 'package:animate_do/animate_do.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../components/categoryTextField.dart';
 import '../../components/custombuttonauth.dart';
 import '../../components/gradient_icon.dart';
 import '../../components/gradient_text.dart';
+import '../../components/note_text_field.dart';
+import '../../components/upload_button.dart';
+import '../../home_page.dart';
 import '../../theme.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class EditNote extends StatefulWidget {
   final String noteID;
@@ -27,6 +35,7 @@ class _EditNoteState extends State<EditNote> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   TextEditingController noteName = TextEditingController();
   bool addLoading = false;
+
   //==============
 
   Future<void> editNote() async {
@@ -48,13 +57,16 @@ class _EditNoteState extends State<EditNote> {
           addLoading = true;
         });
         // we add the id to it so every user can add its own categories
-        await notes.doc(widget.noteID).update({'note': noteName.text});
+        await notes
+            .doc(widget.noteID)
+            .update({'note': noteName.text});
         setState(() {
           addLoading = false;
         });
 
         //after he adds the cateogry take the user back to the home page
-        Navigator.of(context).pushReplacementNamed('home');
+        // Navigator.of(context as BuildContext).pushReplacementNamed('home');
+        Get.to(HomePage());
         // Navigator.of(context).push(
         //   MaterialPageRoute(
         //       builder: (context) => NoteView(
@@ -71,6 +83,9 @@ class _EditNoteState extends State<EditNote> {
     }
   }
 
+//==================
+  
+
   @override
   void initState() {
     super.initState();
@@ -84,25 +99,33 @@ class _EditNoteState extends State<EditNote> {
       backgroundColor: ThemeColor.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: GradientText(
-          "E D I T N O T E ",
-          gradient: LinearGradient(colors: [
-            Color(0xFF04bbff),
-            Color(0xFF515dff),
-          ]),
-          style: TextStyle(fontSize: 22),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: GradientIcon(
+        title: FadeInDown(
+          delay: Duration(milliseconds: 300),
+          curve: Curves.decelerate,
+          child: GradientText(
+            "E D I T N O T E ",
             gradient: LinearGradient(colors: [
-              Color(0xFF515dff),
               Color(0xFF04bbff),
+              Color(0xFF515dff),
             ]),
-            icon: Icons.arrow_back_ios,
-            size: 25,
+            style: TextStyle(fontSize: 22),
+          ),
+        ),
+        leading: FadeInLeft(
+          delay: Duration(milliseconds: 250),
+          curve: Curves.decelerate,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: GradientIcon(
+              gradient: LinearGradient(colors: [
+                Color(0xFF515dff),
+                Color(0xFF04bbff),
+              ]),
+              icon: Icons.arrow_back_ios,
+              size: 25,
+            ),
           ),
         ),
         centerTitle: true,
@@ -118,33 +141,45 @@ class _EditNoteState extends State<EditNote> {
               SizedBox(
                 width: 150,
                 height: 150,
-                child: Image.asset("assets/img/edit-file.png"),
+                child: ZoomIn(
+                    delay: Duration(milliseconds: 300),
+                    curve: Curves.decelerate,
+                    child: Image.asset("assets/img/edit-file.png")),
               ),
               SizedBox(height: 30),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                child: Categorytextfield(
-                  hinttext: "Enter your note ",
-                  mycontroller: noteName,
-                  validator: (val) {
-                    if (val == "") {
-                      return "Can't be empty";
-                    }
-                  },
+                child: FadeInUp(
+                  delay: Duration(milliseconds: 400),
+                  curve: Curves.decelerate,
+                  child: NoteTextField(
+                    hinttext: "Enter your note ",
+                    mycontroller: noteName,
+                    validator: (val) {
+                      if (val == "") {
+                        return "Can't be empty";
+                      }
+                    },
+                  ),
                 ),
               ),
               addLoading
                   ? CircularProgressIndicator(
                       color: ThemeColor.icons,
                     )
-                  : CustomButtonAuth(
-                      title: "Edit",
-                      onPressed: () {
-                        editNote();
-                        noteName.clear();
-                      },
+                  : FadeInUp(
+                      delay: Duration(milliseconds: 650),
+                      curve: Curves.decelerate,
+                      child: CustomButtonAuth(
+                        title: "Edit",
+                        onPressed: () {
+                          editNote();
+                          noteName.clear();
+                        },
+                      ),
                     ),
+             
             ],
           ),
         ),

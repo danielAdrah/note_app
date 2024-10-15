@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 
 class CustomTextForm extends StatelessWidget {
   final String hinttext;
+  Widget prefixIcon;
   final TextEditingController mycontroller;
   final String? Function(String?)? validator;
 
-  const CustomTextForm(
+  CustomTextForm(
       {super.key,
       required this.hinttext,
       required this.mycontroller,
-      this.validator});
+      this.validator,
+      required this.prefixIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class CustomTextForm extends StatelessWidget {
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
           hintText: hinttext,
+          prefixIcon: prefixIcon,
           hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
           contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
           filled: true,
@@ -31,7 +34,11 @@ class CustomTextForm extends StatelessWidget {
                   BorderSide(color: const Color.fromARGB(255, 184, 184, 184))),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
-              borderSide: BorderSide(color: Colors.grey))),
+              borderSide: BorderSide(color: Colors.grey)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide:
+                  BorderSide(color: const Color.fromARGB(255, 92, 92, 92)))),
     );
   }
 }

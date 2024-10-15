@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 
 class ThemeColor {
-  static Color get primary => Color.fromARGB(255, 241, 45, 111);
   static Color get background => Color(0xFF000000);
   static Color get appBar => Color(0xFF111111);
   static Color get card => Color(0xFF222222);

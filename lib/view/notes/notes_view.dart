@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -67,41 +68,53 @@ class _NoteViewState extends State<NoteView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: GradientText(
-          widget.title,
-          gradient: LinearGradient(colors: [
-            Color(0xFF04bbff),
-            Color(0xFF515dff),
-          ]),
-          style: TextStyle(fontSize: 22),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: GradientIcon(
+        title: FadeInDown(
+          delay: Duration(milliseconds: 300),
+          curve: Curves.decelerate,
+          child: GradientText(
+            widget.title,
             gradient: LinearGradient(colors: [
-              Color(0xFF515dff),
               Color(0xFF04bbff),
+              Color(0xFF515dff),
             ]),
-            icon: Icons.arrow_back_ios,
-            size: 25,
+            style: TextStyle(fontSize: 22),
+          ),
+        ),
+        leading: FadeInLeft(
+          delay: Duration(milliseconds: 200),
+          curve: Curves.decelerate,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: GradientIcon(
+              gradient: LinearGradient(colors: [
+                Color(0xFF515dff),
+                Color(0xFF04bbff),
+              ]),
+              icon: Icons.arrow_back_ios,
+              size: 25,
+            ),
           ),
         ),
         backgroundColor: ThemeColor.appBar,
       ),
-      floatingActionButton: GradientFloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+      floatingActionButton: ZoomIn(
+        delay: Duration(milliseconds: 380),
+        curve: Curves.decelerate,
+        child: GradientFloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AddNote(
+                      docID: widget.docID,
+                      title: widget.title,
+                    )));
+          },
         ),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddNote(
-                    docID: widget.docID,
-                    title: widget.title,
-                  )));
-        },
       ),
       // FloatingActionButton(
       //   onPressed: () {
@@ -126,25 +139,29 @@ class _NoteViewState extends State<NoteView> {
             )
           : categoryData.isEmpty
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/img/add.png",
-                        height: 120,
-                        width: 120,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "There are no notes in this category \n Please add note first",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: ThemeColor.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                  child: ZoomIn(
+                    delay: Duration(milliseconds: 350),
+                    curve: Curves.decelerate,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/img/add.png",
+                          height: 120,
+                          width: 120,
                         ),
-                      )
-                    ],
+                        SizedBox(height: 10),
+                        Text(
+                          "There are no notes in this category \n Please add note first",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: ThemeColor.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 )
               : Padding(
@@ -157,17 +174,21 @@ class _NoteViewState extends State<NoteView> {
                           onTap: () {
                             customDialog(context, index);
                           },
-                          child: Card(
-                            margin: EdgeInsets.only(bottom: 20),
-                            color: ThemeColor.card,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 30),
-                              child: Text("${categoryData[index]['note']}",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: ThemeColor.white,
-                                      fontWeight: FontWeight.w600)),
+                          child: FadeInUp(
+                            delay: Duration(milliseconds: 400),
+                            curve: Curves.decelerate,
+                            child: Card(
+                              margin: EdgeInsets.only(bottom: 20),
+                              color: ThemeColor.card,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 30),
+                                child: Text("${categoryData[index]['note']}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: ThemeColor.white,
+                                        fontWeight: FontWeight.w600)),
+                              ),
                             ),
                           ),
                         );
@@ -211,7 +232,14 @@ class _NoteViewState extends State<NoteView> {
                 },
               ),
               SecondaryButton(
-                color: Colors.red,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color.fromARGB(255, 241, 109, 100),
+                    const Color.fromARGB(255, 133, 16, 7)
+                  ],
+                ),
                 title: "Delete",
                 onPressed: () {
                   Navigator.of(context).pop();

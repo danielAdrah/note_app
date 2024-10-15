@@ -12,13 +12,14 @@ class CustomLogoAuth extends StatelessWidget {
           alignment: Alignment.center,
           width: 80,
           height: 80,
-          padding: const EdgeInsets.all(10),
+          padding:
+              const EdgeInsets.only(right: 10, top: 10, bottom: 10, left: 18),
           decoration: BoxDecoration(
               color: Color(0xFF555555),
               borderRadius: BorderRadius.circular(70)),
           child: Image.asset(
             "assets/img/logo.png",
-            height: 40,
+            height: 50,
             // fit: BoxFit.fill,
           )),
     );

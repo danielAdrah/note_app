@@ -18,9 +18,6 @@ class CustomButtonAuth extends StatelessWidget {
           colors: [
             Color(0xFF04bbff),
             Color(0xFF515dff),
-
-            // #04bbff
-            // #515dff
           ],
         ),
         borderRadius: BorderRadius.circular(20),
