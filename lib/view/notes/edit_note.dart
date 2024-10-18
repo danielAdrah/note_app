@@ -1,30 +1,29 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, body_might_complete_normally_nullable, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../components/custombuttonauth.dart';
 import '../../components/gradient_icon.dart';
 import '../../components/gradient_text.dart';
 import '../../components/note_text_field.dart';
-import '../../components/upload_button.dart';
 import '../../home_page.dart';
 import '../../theme.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class EditNote extends StatefulWidget {
   final String noteID;
   final String categoryID;
   final String oldNote;
+  final String image;
+  final String condition;
   const EditNote({
     super.key,
     required this.noteID,
     required this.categoryID,
     required this.oldNote,
+    required this.image,
+    required this.condition,
   });
 
   @override
@@ -57,9 +56,7 @@ class _EditNoteState extends State<EditNote> {
           addLoading = true;
         });
         // we add the id to it so every user can add its own categories
-        await notes
-            .doc(widget.noteID)
-            .update({'note': noteName.text});
+        await notes.doc(widget.noteID).update({'note': noteName.text});
         setState(() {
           addLoading = false;
         });
@@ -84,7 +81,6 @@ class _EditNoteState extends State<EditNote> {
   }
 
 //==================
-  
 
   @override
   void initState() {
@@ -179,7 +175,17 @@ class _EditNoteState extends State<EditNote> {
                         },
                       ),
                     ),
-             
+              SizedBox(height: 50),
+              if (widget.condition != "None")
+                ZoomIn(
+                  child: Image.network(
+                    widget.image,
+                    height: 200,
+                    width: 350,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              SizedBox(height: 150),
             ],
           ),
         ),

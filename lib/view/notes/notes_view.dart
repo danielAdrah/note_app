@@ -2,6 +2,7 @@
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:note_app/theme.dart';
@@ -44,16 +45,6 @@ class _NoteViewState extends State<NoteView> {
   }
 
   //===
-  deleteNote(String id) async {
-    await FirebaseFirestore.instance
-        .collection('categories')
-        .doc(widget.docID)
-        .collection('note')
-        .doc(id)
-        .delete();
-
-    Navigator.of(context).pushReplacementNamed('home');
-  }
 
   @override
   void initState() {
@@ -226,6 +217,8 @@ class _NoteViewState extends State<NoteView> {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => EditNote(
+                          condition: categoryData[index]['url'],
+                          image: categoryData[index]['url'],
                           noteID: categoryData[index].id,
                           categoryID: widget.docID,
                           oldNote: categoryData[index]['note'])));
@@ -241,9 +234,24 @@ class _NoteViewState extends State<NoteView> {
                   ],
                 ),
                 title: "Delete",
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  deleteNote(categoryData[index].id);
+                onPressed: () async {
+                  // deleteNote(categoryData[index].id);
+                  await FirebaseFirestore.instance
+                      .collection('categories')
+                      .doc(widget.docID)
+                      .collection('note')
+                      .doc(categoryData[index].id)
+                      .delete();
+                  //here we checked if the note has an image
+                  //if it does we delete it from the storage
+                  // so we pass the image url to dlete it
+                  if (categoryData[index]['url'] != "None") {
+                    FirebaseStorage.instance
+                        .refFromURL(categoryData[index]['url'])
+                        .delete();
+                  }
+
+                  Navigator.of(context).pushReplacementNamed('home');
                 },
               ),
             ],

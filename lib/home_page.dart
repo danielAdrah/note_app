@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: ThemeColor.background,
       appBar: AppBar(
         backgroundColor: ThemeColor.appBar,
+
         centerTitle: true,
         //this is a text with a gradient color
         title: FadeInDown(

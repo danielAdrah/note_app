@@ -31,27 +31,7 @@ class _AddNoteState extends State<AddNote> {
   bool imgLoading = false;
   File? file;
   String? url;
-  //==============
-
-  getImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imgLoading = true;
-    });
-    if (image != null) {
-      file = File(image.path);
-      var imageName = basename(image.path);
-
-      var refStorage = FirebaseStorage.instance.ref("images/$imageName");
-      await refStorage.putFile(file!);
-      url = await refStorage.getDownloadURL();
-    }
-    setState(() {});
-    setState(() {
-      imgLoading = false;
-    });
-  }
+  
 
   //=============
   Future<void> addNote(BuildContext context) async {
@@ -71,7 +51,8 @@ class _AddNoteState extends State<AddNote> {
           addLoading = true;
         });
         // we add the id to it so every user can add its own categories
-        DocumentReference response = await notes.add({'note': noteName.text, 'url':url ?? 'None'});
+        DocumentReference response =
+            await notes.add({'note': noteName.text, 'url': url ?? 'None'});
         setState(() {
           addLoading = false;
         });
@@ -92,6 +73,28 @@ class _AddNoteState extends State<AddNote> {
         print(e.toString());
       }
     }
+  }
+
+  //==============
+
+  getImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imgLoading = true;
+    });
+    if (image != null) {
+      file = File(image.path);
+      var imageName = basename(image.path);
+
+      var refStorage = FirebaseStorage.instance.ref("images/$imageName");
+      await refStorage.putFile(file!);
+      url = await refStorage.getDownloadURL();
+    }
+    setState(() {});
+    setState(() {
+      imgLoading = false;
+    });
   }
 
   //=============
